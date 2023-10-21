@@ -1,0 +1,36 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: model-example-aaa-deployment
+  namespace: mlserve-model-example-aaa
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: model-example-aaa
+  template:
+    metadata:
+      labels:
+        app: model-example-aaa
+    spec:
+      containers:
+      - name: model-example-aaa
+        image: jleighsutherland/model_example_aaa:v5
+        ports:
+        - containerPort: 5000
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: model-example-aaa-service
+  namespace: mlserve-model-example-aaa
+spec:
+  selector:
+    app: model-example-aaa
+  ports:
+    - protocol: TCP
+      port: 5000
+      targetPort: 5000
+  type: NodePort  # Expose the service to the outside world via a NodePort
